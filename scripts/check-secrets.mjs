@@ -9,7 +9,8 @@ if (mode !== "--staged" && mode !== "--all") {
 }
 
 function git(...args) {
-  return execFileSync("git", args, { encoding: "buffer" });
+  // Git's 1 MiB default output cap is too small for staged image assets.
+  return execFileSync("git", args, { encoding: "buffer", maxBuffer: 64 * 1024 * 1024 });
 }
 
 const paths = git(

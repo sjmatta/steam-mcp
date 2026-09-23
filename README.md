@@ -1,6 +1,6 @@
 # steam-mcp
 
-<img src="assets/logo.svg" alt="A smiling game library with colorful cards and connected dots" width="180" />
+<img src="assets/logo.png" alt="A cheerful game library mascot holding three colorful fantasy game cards" width="180" />
 
 [![CI](https://github.com/sjmatta/steam-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/sjmatta/steam-mcp/actions/workflows/ci.yml)
 

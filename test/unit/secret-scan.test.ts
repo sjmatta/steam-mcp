@@ -30,6 +30,11 @@ describe("secret scan", () => {
       writeFileSync(`${dir}/safe.txt`, "No credentials here.\n");
       expect(run("--all").status).toBe(0);
       expect(run("--staged").status).toBe(1);
+
+      writeFileSync(`${dir}/logo.png`, Buffer.alloc(1_100_000));
+      execFileSync("git", ["add", "logo.png"], { cwd: dir });
+      expect(run("--all").status).toBe(0);
+      expect(run("--staged").status).toBe(1);
     } finally {
       cleanup();
     }
