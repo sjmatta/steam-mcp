@@ -1,5 +1,7 @@
 # steam-mcp
 
+<img src="assets/logo.svg" alt="A smiling game library with colorful cards and connected dots" width="180" />
+
 [![CI](https://github.com/sjmatta/steam-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/sjmatta/steam-mcp/actions/workflows/ci.yml)
 
 A local MCP server for the Steam desktop client on macOS: browse and filter your library, and
