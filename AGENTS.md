@@ -18,7 +18,7 @@ Vitest runs `test/unit/**/*.test.ts` with `npm test`; these tests must use fixtu
 
 ## Commit & Pull Request Guidelines
 
-Recent commits use imperative subjects, such as `Add GitHub Actions CI`, with bodies explaining decisions. In pull requests, describe the change, Steam safety implications, and commands run; link an issue when applicable. Include live-client evidence for changes that depend on Steam's CEF behavior. CI runs `npm run check`, a build, a hermeticity check, and the stdio smoke test; live integration tests remain local.
+Use imperative commit subjects and explain nontrivial decisions in the body. Open a PR for every `main` change; CI, CodeQL, and dependency review must pass. Rebase merge; GitHub deletes the branch afterward. In the PR, describe Steam safety, commands run, and any linked issue. Include live-client evidence for changes that depend on Steam's CEF behavior. Live integration tests remain local.
 
 ## Security & Configuration
 
