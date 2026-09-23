@@ -170,7 +170,7 @@ npm run check         # everything above except build, coverage and smoke
 
 ### CI
 
-`.github/workflows/ci.yml`, on push to `main`, on pull requests, and on demand.
+`.github/workflows/ci.yml` runs on pushes to `main`, pull requests, and on demand.
 Node 22 (the `engines` floor) and 24 on Linux, plus Node 24 on macOS — the only
 platform the server supports, so that the day the unit suite stops being
 platform-independent is the day CI says so.
@@ -192,6 +192,10 @@ structurally cannot:
 There is **no deployment job and no integration job**. The integration suite
 needs a real, logged-in Steam desktop client to drive over CEF; no hosted runner
 has one. Those stay opt-in and local.
+
+Pull requests also run `.github/workflows/dependency-review.yml` to catch newly
+introduced vulnerable dependencies. `.github/workflows/codeql.yml` scans
+TypeScript and GitHub Actions workflows on pushes, pull requests, and weekly.
 
 ### Git hooks
 
