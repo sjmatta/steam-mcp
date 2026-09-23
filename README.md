@@ -1,5 +1,7 @@
 # steam-mcp
 
+[![CI](https://github.com/sjmatta/steam-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/sjmatta/steam-mcp/actions/workflows/ci.yml)
+
 A local MCP server for the Steam desktop client on macOS: browse and filter your library, and
 **read and write library collections** — the thing Steam exposes no web API for.
 
