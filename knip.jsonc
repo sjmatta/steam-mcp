@@ -1,0 +1,15 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+
+  // src/index.ts comes from package.json "bin"; the smoke script from "scripts".
+  "entry": ["test/**/*.test.ts"],
+  "project": ["src/**/*.ts", "test/**/*.ts", "scripts/**/*.mjs"],
+
+  "rules": {
+    // Every type this flags names a component of an exported interface's
+    // public signature (Envelope in Cache.read, PortState in PortProbe, and
+    // so on). They are documentation, not dead code, and un-exporting them
+    // would make parts of a public shape unnameable.
+    "types": "off",
+  },
+}

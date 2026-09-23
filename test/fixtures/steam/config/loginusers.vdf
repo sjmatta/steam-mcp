@@ -1,0 +1,21 @@
+"users"
+{
+	"76561197972611406"
+	{
+		"AccountName"		"testuser"
+		"PersonaName"		"Test User"
+		"RememberPassword"		"1"
+		"WantsOfflineMode"		"0"
+		"SkipOfflineModeWarning"		"0"
+		"AutoLogin"		"1"
+		"Timestamp"		"1785869057"
+	}
+	"76561197960265729"
+	{
+		"AccountName"		"olderaccount"
+		"PersonaName"		"Older Account"
+		"RememberPassword"		"0"
+		"AutoLogin"		"0"
+		"Timestamp"		"1600000000"
+	}
+}

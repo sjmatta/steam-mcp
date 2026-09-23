@@ -1,0 +1,18 @@
+"libraryfolders"
+{
+	"0"
+	{
+		"path"		"/nonexistent/second-library"
+		"label"		""
+		"contentid"		"1234567890"
+		"totalsize"		"0"
+		"update_clean_bytes_tally"		"0"
+		"time_last_update_verified"		"0"
+		"apps"
+		{
+			"427520"		"2591773184"
+			"212680"		"527085568"
+			"3219010"		"1251424178"
+		}
+	}
+}

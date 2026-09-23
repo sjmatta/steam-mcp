@@ -1,0 +1,60 @@
+"UserLocalConfigStore"
+{
+	"friends"
+	{
+		"PersonaName"		"Test User"
+	}
+	"Software"
+	{
+		"Valve"
+		{
+			"Steam"
+			{
+				"apps"
+				{
+					"427520"
+					{
+						"LastPlayed"		"1784500000"
+						"Playtime2wks"		"120"
+						"Playtime"		"9028"
+						"cloud"
+						{
+							"last_sync_state"		"synchronized"
+						}
+					}
+					"212680"
+					{
+						"LastPlayed"		"1527475185"
+						"Playtime"		"1"
+					}
+					"620"
+					{
+						"LastPlayed"		"0"
+						"Playtime"		"0"
+					}
+					"999"
+					{
+						"cloud"
+						{
+							"last_sync_state"		"synchronized"
+						}
+					}
+				}
+				"DefaultLaunchOption"		"0"
+			}
+		}
+	}
+	"WebStorage"
+	{
+		"apps"
+		{
+			"427520"
+			{
+				"DefaultLaunchOption"		"1"
+			}
+		}
+		"LocalizedTagNames2_english"		"{\"version_hash\":\"711684454\",\"tags\":[{\"tagid\":9,\"name\":\"Strategy\"},{\"tagid\":19,\"name\":\"Action\"},{\"tagid\":492,\"name\":\"Indie\"},{\"tagid\":1716,\"name\":\"Roguelike\"}]}"
+		"PrivateApps_12345678"		"[431960,1790230]"
+		"user-collections"		"{}"
+	}
+}

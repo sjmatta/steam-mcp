@@ -1,0 +1,66 @@
+{
+  "name": "steam-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local MCP server for the Steam desktop client: library listing/filtering/search and collection management via Steam's CEF debugger.",
+  "bin": {
+    "steam-mcp": "./dist/index.js"
+  },
+  "engines": {
+    "node": ">=22.22.1"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.check.json",
+    "dev": "tsx src/index.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "deps": "knip",
+    "secrets:check": "node scripts/check-secrets.mjs --all",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "vitest run --config vitest.integration.config.ts",
+    "smoke": "npm run build && node scripts/smoke-stdio.mjs",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run deps && npm run secrets:check && npm run test",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write",
+      "eslint --fix --max-warnings=0"
+    ],
+    "*.{json,md,mjs,yml}": "prettier --write"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "ws": "^8.18.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.0.0",
+    "@types/ws": "^8.5.13",
+    "@vitest/coverage-v8": "^4.1.11",
+    "eslint": "^10.8.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.9.0",
+    "husky": "^9.1.7",
+    "knip": "^6.31.0",
+    "lint-staged": "^17.3.0",
+    "prettier": "^3.9.6",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.66.0",
+    "vitest": "^4.1.11"
+  },
+  "overrides": {
+    "fast-uri": "3.1.7",
+    "hono": "4.13.7",
+    "qs": "6.16.0",
+    "nanoid": "3.3.18"
+  }
+}

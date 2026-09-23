@@ -1,0 +1,16 @@
+// A partially-downloaded app: StateFlags 1026 has bit 4 clear, so it is NOT
+// fully installed. Also exercises escaped characters and a comment line.
+"AppState"
+{
+	"appid"		"3219010"
+	"universe"		"1"
+	"name"		"Fogpiercer \"Deluxe\" Edition"
+	"StateFlags"		"1026"
+	"installdir"		"Fogpiercer"
+	"LastUpdated"		"1785869063"
+	"LastPlayed"		"1784342313"
+	"SizeOnDisk"		"1251424178"
+	"buildid"		"24500052"
+	"BytesToDownload"		"1251424178"
+	"BytesDownloaded"		"600000000"
+}

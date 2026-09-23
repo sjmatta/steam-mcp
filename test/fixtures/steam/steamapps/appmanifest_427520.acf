@@ -1,0 +1,29 @@
+"AppState"
+{
+	"appid"		"427520"
+	"universe"		"1"
+	"name"		"Factorio"
+	"StateFlags"		"4"
+	"installdir"		"Factorio"
+	"LastUpdated"		"1784342313"
+	"LastPlayed"		"1784500000"
+	"SizeOnDisk"		"2591773184"
+	"StagingSize"		"0"
+	"buildid"		"18027179"
+	"LastOwner"		"76561197972611406"
+	"UpdateResult"		"0"
+	"BytesToDownload"		"0"
+	"BytesDownloaded"		"0"
+	"InstalledDepots"
+	{
+		"427521"
+		{
+			"manifest"		"1234567890123456789"
+			"size"		"2591773184"
+		}
+	}
+	"UserConfig"
+	{
+		"language"		"english"
+	}
+}

@@ -1,0 +1,4 @@
+# The full gate: formatting, lint, types, dependency hygiene, unit tests.
+# Integration tests are not run here - they drive the real Steam client and
+# would quit and relaunch it underneath whoever is pushing.
+npm run check

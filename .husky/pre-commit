@@ -1,0 +1,3 @@
+# Fast, staged-only. Anything slower belongs in pre-push.
+node scripts/check-secrets.mjs --staged
+npx lint-staged

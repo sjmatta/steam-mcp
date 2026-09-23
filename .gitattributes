@@ -1,0 +1,6 @@
+* text=auto eol=lf
+
+package-lock.json linguist-generated=true -diff
+
+# Verbatim Steam output: never normalised, never munged by a merge driver.
+test/fixtures/** -text

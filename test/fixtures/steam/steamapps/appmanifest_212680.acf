@@ -1,0 +1,17 @@
+"AppState"
+{
+	"appid"		"212680"
+	"universe"		"1"
+	"name"		"FTL: Faster Than Light"
+	"StateFlags"		"4"
+	"installdir"		"FTL Faster Than Light"
+	"LastUpdated"		"1700000000"
+	"LastPlayed"		"0"
+	"SizeOnDisk"		"527085568"
+	"buildid"		"1234567"
+	"LastOwner"		"76561197972611406"
+	"UserConfig"
+	{
+		"language"		"english"
+	}
+}

@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# A newer push makes an in-flight run irrelevant.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check (node ${{ matrix.node }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # 22 is the floor declared in package.json engines; 24 is what this is
+        # developed on. macOS is the only platform the server actually supports,
+        # so it gets a job even though the unit suite is platform-independent -
+        # if that ever stops being true, this is where it shows up.
+        include:
+          - { os: ubuntu-latest, node: 22 }
+          - { os: ubuntu-latest, node: 24 }
+          - { os: macos-latest, node: 24 }
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      # `npm ci` refuses to run if package-lock.json has drifted from
+      # package.json, which is a check worth having on its own.
+      - name: Install
+        run: npm ci
+
+      - name: Check (format, lint, types, dependencies, unit tests)
+        run: npm run check
+
+      # The unit suite claims to be hermetic: no network, no real Steam install,
+      # no writes outside a temp directory. Pointing STEAM_ROOT at nothing is
+      # what keeps that claim honest, so CI asserts it rather than trusting it.
+      - name: Unit tests are hermetic
+        run: npm test
+        env:
+          STEAM_ROOT: /nonexistent
+
+      - name: Build
+        run: npm run build
+
+      # The page programs are shipped to Steam's Chromium context as source via
+      # Function.prototype.toString(). A compiler helper in that emit is an
+      # unresolvable identifier inside Steam - a runtime failure no type check
+      # or unit test would catch, because it only exists in the built output.
+      - name: Built page programs contain no injected helpers
+        shell: bash
+        run: |
+          if grep -lE '__awaiter|__generator|__spreadArray|__assign|tslib|__name' dist/cdp/programs/*.js; then
+            echo "::error::A compiler helper leaked into a page program's emit."
+            exit 1
+          fi
+          echo "OK: no injected helpers."
+
+      # Starting the server proves the whole wiring holds, and that stdout
+      # carries nothing but JSON-RPC - a stray write there corrupts the protocol
+      # stream and drops the client connection.
+      - name: Server starts and speaks clean JSON-RPC on stdout
+        shell: bash
+        run: node scripts/smoke-stdio.mjs
+
+  coverage:
+    name: coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run test:coverage
+      - uses: actions/upload-artifact@v7
+        with:
+          name: coverage
+          path: coverage/
+          retention-days: 14
+# There is deliberately no integration job. test/integration drives a real,
+# logged-in Steam desktop client over its CEF debugger and mutates real
+# collections; no hosted runner has one. Those tests stay opt-in and local:
+#   STEAM_MCP_E2E=1 npm run test:e2e

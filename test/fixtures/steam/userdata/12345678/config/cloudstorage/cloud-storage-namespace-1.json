@@ -1,0 +1,115 @@
+[
+ [
+  "user-collections.favorite",
+  {
+   "key": "user-collections.favorite",
+   "timestamp": 1700000000,
+   "version": "100",
+   "conflictResolutionMethod": "custom",
+   "strMethodId": "union-collections",
+   "value": "{\"id\":\"favorite\",\"name\":\"Favorites\",\"added\":[427520,212680],\"removed\":[]}"
+  }
+ ],
+ [
+  "user-collections.hidden",
+  {
+   "key": "user-collections.hidden",
+   "timestamp": 1700000000,
+   "version": "100",
+   "conflictResolutionMethod": "custom",
+   "strMethodId": "union-collections",
+   "value": "{\"id\":\"hidden\",\"name\":\"Hidden\",\"added\":[620],\"removed\":[]}"
+  }
+ ],
+ [
+  "user-collections.uc-Aj+bldZKtzMv",
+  {
+   "key": "user-collections.uc-Aj+bldZKtzMv",
+   "timestamp": 1700000000,
+   "version": "100",
+   "conflictResolutionMethod": "custom",
+   "strMethodId": "union-collections",
+   "value": "{\"id\":\"uc-Aj+bldZKtzMv\",\"name\":\"Tools & Servers\",\"added\":[999,427520],\"removed\":[]}"
+  }
+ ],
+ [
+  "user-collections.uc-8qBpJj1*+Borh",
+  {
+   "key": "user-collections.uc-8qBpJj1*+Borh",
+   "timestamp": 1700000000,
+   "version": "100",
+   "conflictResolutionMethod": "custom",
+   "strMethodId": "union-collections",
+   "value": "{\"id\":\"uc-8qBpJj1*+Borh\",\"name\":\"City Builder & Management\",\"added\":[427520],\"removed\":[]}"
+  }
+ ],
+ [
+  "user-collections.uc-B2ZzHzFyWFUr",
+  {
+   "key": "user-collections.uc-B2ZzHzFyWFUr",
+   "timestamp": 1700000000,
+   "version": "100",
+   "conflictResolutionMethod": "custom",
+   "strMethodId": "union-collections",
+   "value": "{\"id\":\"uc-B2ZzHzFyWFUr\",\"name\":\"Atmospheric\",\"added\":[],\"removed\":[212680],\"filterSpec\":{\"nFormatVersion\":2,\"strSearchText\":\"\",\"filterGroups\":[{\"rgOptions\":[],\"bAcceptUnion\":true},{\"rgOptions\":[4166],\"bAcceptUnion\":false}]}}"
+  }
+ ],
+ [
+  "user-collections.from-tag-Utilities",
+  {
+   "key": "user-collections.from-tag-Utilities",
+   "timestamp": 1700000000,
+   "version": "100",
+   "conflictResolutionMethod": "custom",
+   "strMethodId": "union-collections",
+   "is_deleted": true
+  }
+ ],
+ [
+  "user-collections.uc-DeletedOne",
+  {
+   "key": "user-collections.uc-DeletedOne",
+   "timestamp": 1700000000,
+   "version": "100",
+   "conflictResolutionMethod": "custom",
+   "strMethodId": "union-collections",
+   "is_deleted": true
+  }
+ ],
+ [
+  "user-collections.uc-Corrupt",
+  {
+   "key": "user-collections.uc-Corrupt",
+   "timestamp": 1,
+   "version": "1",
+   "value": "{not json"
+  }
+ ],
+ [
+  "sc-version",
+  {
+   "key": "sc-version",
+   "timestamp": 1,
+   "version": "1",
+   "value": "6"
+  }
+ ],
+ [
+  "NewContentRollup_427520",
+  {
+   "key": "NewContentRollup_427520",
+   "timestamp": 1,
+   "version": "1",
+   "value": "{}"
+  }
+ ],
+ [
+  "showcases.3",
+  {
+   "key": "showcases.3",
+   "timestamp": 1,
+   "version": "1",
+   "value": "{\"nShowcaseId\": 3, \"strCollectionId\": \"play-next\"}"
+  }
+ ]
+]

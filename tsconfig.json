@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "rootDir": "src",
+    "outDir": "dist",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    // CRITICAL: src/cdp/programs/* are shipped to Steam's page via fn.toString().
+    // Any injected TS helper (__awaiter, __spreadArray, tslib) would reference an
+    // identifier that does not exist in the page. ES2023 + these two flags keep the
+    // emit native. Do not change without updating the page-function guard test.
+    "importHelpers": false,
+    "downlevelIteration": false,
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

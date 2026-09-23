@@ -1,0 +1,5 @@
+"AppState"
+{
+	"universe"		"1"
+	"name"		"Manifest with no appid - must be skipped, not crash the whole read"
+	"StateFlags"		"4"
