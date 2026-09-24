@@ -45,11 +45,9 @@ export class EvalQueue {
     this.peak = Math.max(this.peak, this.inFlight);
 
     let timer: ReturnType<typeof setTimeout> | undefined;
-    let timedOut = false;
 
     const timeout = new Promise<never>((_, reject) => {
       timer = setTimeout(() => {
-        timedOut = true;
         this.onTimeout(label);
         reject(
           new SteamError(
@@ -70,7 +68,6 @@ export class EvalQueue {
     } finally {
       if (timer) clearTimeout(timer);
       this.inFlight--;
-      void timedOut;
     }
   }
 }
