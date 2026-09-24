@@ -101,10 +101,9 @@ export async function quitSteam(timeoutMs = 45_000): Promise<{ quitMs: number }>
 
   try {
     await exec("osascript", ["-e", 'tell application "Steam" to quit'], { timeout: 15_000 });
-  } catch (e) {
+  } catch {
     // Steam may already be shutting down, or may not have registered with
     // AppleScript. Fall through to polling before deciding it failed.
-    void e;
   }
 
   while (Date.now() - started < timeoutMs) {
