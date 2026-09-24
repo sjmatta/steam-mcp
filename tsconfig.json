@@ -13,10 +13,9 @@
     "skipLibCheck": true,
     // CRITICAL: src/cdp/programs/* are shipped to Steam's page via fn.toString().
     // Any injected TS helper (__awaiter, __spreadArray, tslib) would reference an
-    // identifier that does not exist in the page. ES2023 + these two flags keep the
-    // emit native. Do not change without updating the page-function guard test.
+    // identifier that does not exist in the page. ES2023 + importHelpers: false keep
+    // the emit native. Do not change without updating the page-function guard test.
     "importHelpers": false,
-    "downlevelIteration": false,
     "resolveJsonModule": true,
     "declaration": false,
     "sourceMap": true,

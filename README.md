@@ -300,8 +300,8 @@ that legitimately changes as games are installed, played, hidden and re-categori
 ### In-page programs
 
 `src/cdp/programs/*.ts` are shipped to Steam via `Function.prototype.toString()`. They
-must not reference module scope and must return plain JSON. `tsconfig.json` sets
-`importHelpers: false` and `downlevelIteration: false` so `tsc` emits no helpers, and
+must not reference module scope and must return plain JSON. `tsconfig.json` targets
+ES2023 with `importHelpers: false` so `tsc` emits no helpers, and
 `auditPageFunction` (exercised over every program in `cdp-expression`) fails the build
 if a helper or closure capture ever appears.
 
