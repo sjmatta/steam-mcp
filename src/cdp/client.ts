@@ -243,7 +243,7 @@ class SteamCdpClient {
    * `fn` is serialized with Function.prototype.toString(), so it must not
    * capture anything from module scope or rely on TypeScript helpers — see the
    * guard test in scripts/smoke.ts and the tsconfig comment about
-   * importHelpers/downlevelIteration.
+   * importHelpers and the ES2023 target.
    */
   async evalInPage<A, R>(fn: (arg: A) => R | Promise<R>, arg: A, label = "eval"): Promise<R> {
     return this.queue.run(label, () => this.runExclusive(fn, arg, label));
