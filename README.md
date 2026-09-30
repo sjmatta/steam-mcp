@@ -19,7 +19,7 @@ by driving Steam's own Chromium debugger (`SharedJSContext`), where the library 
 
 ## Requirements
 
-- macOS and Node 22.22.1+ (Node 24 recommended; see `.nvmrc`)
+- macOS and Node 22.22.1+ (development uses Node LTS 24.21.0 through nvm; see `.nvmrc`)
 - Steam installed and signed in
 - For collection writes: Steam running with CEF debugging enabled (the `steam_restart` tool does this)
 
@@ -52,8 +52,99 @@ claude mcp remove steam
 claude mcp add steam -e STEAM_MCP_ALLOW_WRITES=1 -- node "$(pwd)/dist/index.js"
 ```
 
-The `.env.example` file lists available variables; copying it to `.env` does not load it
-automatically. Pass values through your MCP client or process environment. Keep API keys out of Git.
+The `.env.example` file lists available variables. The Desktop plugin described below loads the
+checkout's `.env`; other clients must pass values through their configuration or process
+environment. Keep API keys out of Git.
+
+### Local Desktop plugin (Work and Codex)
+
+Install [Task](https://taskfile.dev/) and nvm, then run from this checkout:
+
+```bash
+task install       # nvm install, then npm ci with the pinned Node LTS
+task plugin:setup  # configure, build, verify, and install for local Work/Codex
+```
+
+`plugin:setup` is safe to rerun. It creates a private, ignored `.env` with mode `0600` from an
+existing standalone `steam` MCP registration, if present. An existing `.env` is preserved.
+Without a registration, it defaults to read-only; edit `.env` to set
+`STEAM_MCP_ALLOW_WRITES=1` when you want collection edits. Optional API keys also go in `.env`.
+Inherited environment variables take precedence over the `.env` values.
+
+The task generates a local marketplace and plugin under ignored `.plugin-build/`, registers
+`steam-local`, and installs `steam@steam-local` with the Codex CLI. The package contains the
+manifest, logo, and MCP launch configuration, with absolute paths to this checkout and nvm's
+Node executable. Credentials remain outside the package. Keep the checkout in place; rerun setup
+after moving it, changing Node versions, or updating the plugin. To select a different CLI path,
+run `task plugin:setup CODEX_BIN=/absolute/path/to/codex`.
+
+After successful installation, setup disables the old standalone `steam` registration while
+retaining its settings. This prevents two server processes from independently driving Steam's
+debugger. It leaves other MCP servers and plugins alone.
+
+Restart ChatGPT Desktop, switch to **Work on this Mac** or **Codex**, open Plugins, and find
+**Steam Library** under **Steam Local**. Select it in a new conversation and ask it to call
+`steam_status` before trying collection changes. OpenAI documents local marketplaces for Work
+and Codex. This installation does not register a hosted ChatGPT app and has not exposed Steam's
+tools to Chat mode in our verification. This local plugin requires the Mac.
+See OpenAI's [local plugin packaging instructions](https://developers.openai.com/plugins/build/plugins).
+
+For **Chat mode**, use a registered ChatGPT developer-mode MCP connection. The documented
+private-server route is [Secure MCP Tunnel](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels):
+create a tunnel in Platform tunnel settings, associate it with the target ChatGPT account/workspace,
+run `tunnel-client` on this Mac against the stdio server, then create a ChatGPT plugin connection
+with **Connection → Tunnel**. This needs a tunnel ID and a runtime API key. Neither the local plugin
+installation nor a successful local handshake completes that account-side setup.
+
+### Secure MCP Tunnel for Chat mode
+
+Create a tunnel in [Platform tunnel settings](https://platform.openai.com/settings/organization/tunnels)
+and associate it with your ChatGPT workspace. Initialize this checkout with its ID:
+
+```bash
+TUNNEL_ID=tunnel_your_id task tunnel:setup
+```
+
+Setup downloads the latest official Mac `tunnel-client` if absent, verifies its SHA-256 against
+the release checksum file, builds Steam, and generates a private local profile. The tunnel ID
+is retained in ignored `.tunnel/tunnel-id`, so later runs need only `task tunnel:setup`.
+Use `task tunnel:download` to update the binary to the latest release.
+
+Create a **runtime API key**, not an admin key, whose principal has **Tunnels Read + Use**.
+Save only the key text to `.tunnel/runtime-api-key`; the task uses a `file:` reference and never
+puts the credential in command arguments, the profile, or the plugin package. One way to enter
+it without displaying it or placing it in shell history is:
+
+```bash
+task tunnel:key  # hidden prompt; saves the key with permissions 0600
+task tunnel:doctor
+task tunnel:start
+task tunnel:status
+```
+
+`tunnel:start` uses the client's managed runtime supervisor with the alias `steam-chat` and
+disables duplicate local Steam registrations. Restart Desktop to release already-running local
+plugin processes before calling Steam through Chat. The health UI stays on loopback, and MCP
+requests are dispatched one at a time. Check the status output's process, health, and readiness
+fields; an existing tunnel or profile alone does not mean the connection is running.
+
+While the tunnel is healthy, open ChatGPT Plugins in developer mode, create a connection named
+**Steam Library**, and choose **Connection → Tunnel** with your saved tunnel ID. Verify that
+discovery finds all 23 tools. Select that connection in a new Chat-mode conversation and call
+`steam_status` to establish end-to-end availability. Keep this Mac and the tunnel running for
+each ChatGPT tool call. `task tunnel:stop` stops the local runtime without deleting the remote
+tunnel. Avoid running local Work/Codex Steam tools and the tunnel simultaneously.
+
+Useful tasks:
+
+- `task plugin:build`: build the server and generate the package, without installing it.
+- `task plugin:check`: start the generated plugin command and verify all 23 tool schemas and the
+  writes-disabled guard, without accessing the real Steam install.
+- `task plugin:install`: build, verify, and install or refresh the package, preserving `.env`.
+- `task check` and `task smoke`: run the repository checks or verify the server handshake.
+
+The plugin's private `.env` is separate from the retained standalone registration. Change `.env`
+to adjust plugin settings; restarting the plugin is required for runtime changes.
 
 ## Configuration
 

@@ -1,0 +1,22 @@
+{
+  "name": "steam",
+  "version": "0.1.0",
+  "description": "Browse your local Steam library and manage library collections on this Mac.",
+  "author": {
+    "name": "Stephen Matta"
+  },
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Steam Library",
+    "shortDescription": "Browse games and organize Steam collections",
+    "longDescription": "Connect to Steam on this Mac to browse games, find games without collections, and organize your library. Collection changes use Steam's running client, support dry runs, and are verified after writing. Requires the local steam-mcp checkout and Node.js.",
+    "developerName": "Stephen Matta",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "composerIcon": "./assets/logo.png",
+    "logo": "./assets/logo.png",
+    "defaultPrompt": [
+      "Check Steam for games without a collection and categorize them. Preview bulk changes with dry_run first."
+    ]
+  }
+}
