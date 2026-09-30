@@ -120,6 +120,48 @@ describe("Steam Web API", () => {
     });
   });
 
+  it("sanitizes malformed response bodies without exposing credentials", async () => {
+    stubFetch(() => ({ text: "invalid JSON with key=TESTKEY" }));
+    const { getOwnedGames } = await import("../../src/web/webapi.js");
+    await expect(getOwnedGames(STEAMID)).rejects.toMatchObject({
+      code: "NETWORK_ERROR",
+      message: "Steam Web API request failed.",
+    });
+  });
+
+  it("aborts a stalled response body after the request deadline", async () => {
+    vi.useFakeTimers();
+    try {
+      vi.stubGlobal(
+        "fetch",
+        vi.fn(async (_url: string, options: RequestInit) => ({
+          ok: true,
+          status: 200,
+          json: () =>
+            new Promise((_resolve, reject) => {
+              options.signal!.addEventListener(
+                "abort",
+                () => {
+                  reject(new Error("body stalled"));
+                },
+                {
+                  once: true,
+                },
+              );
+            }),
+        })),
+      );
+      const { getOwnedGames } = await import("../../src/web/webapi.js");
+      const result = expect(getOwnedGames(STEAMID)).rejects.toMatchObject({
+        code: "NETWORK_ERROR",
+      });
+      await vi.advanceTimersByTimeAsync(20_000);
+      await result;
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("returns null when the profile is absent", async () => {
     stubFetch(() => ({ body: { response: { players: [] } } }));
     const { getPlayerSummary } = await import("../../src/web/webapi.js");
@@ -220,6 +262,19 @@ describe("store API", () => {
     const { getStoreDetails } = await import("../../src/web/store.js");
     await expect(getStoreDetails(1)).resolves.toMatchObject({ success: false });
   });
+
+  it.each([{ throws: true }, { status: 429 }, { status: 503 }, { text: "not JSON" }, { body: {} }])(
+    "retries temporary store failures instead of caching a miss: %j",
+    async (failure) => {
+      let failed = true;
+      const http = stubFetch(() => (failed ? failure : { body: detailsBody(427520) }));
+      const { getStoreDetails } = await import("../../src/web/store.js");
+      expect(await getStoreDetails(427520)).toMatchObject({ success: false });
+      failed = false;
+      expect(await getStoreDetails(427520)).toMatchObject({ success: true, name: "Factorio" });
+      expect(http.countMatching("appdetails")).toBe(2);
+    },
+  );
 
   it("summarises reviews and computes a positive percentage", async () => {
     stubFetch((url) =>

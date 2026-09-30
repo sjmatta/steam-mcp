@@ -90,7 +90,9 @@ export async function getStoreDetails(
   const entry = body?.[key];
   if (!entry?.success || !entry.data) {
     const miss: StoreDetails = { appid, success: false };
-    cache().set("store-details", miss, key);
+    // Only an explicit store miss is durable. Network errors, throttling and
+    // malformed responses must not hide a valid game for the negative TTL.
+    if (entry?.success === false) cache().set("store-details", miss, key);
     return miss;
   }
 

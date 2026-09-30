@@ -359,7 +359,7 @@ export function registerLibraryTools(server: McpServer): void {
           } else {
             payload["store"] = {
               available: false,
-              note: "Not available on the store (delisted or region-locked).",
+              note: "Store details unavailable; the app may be delisted, region-locked, or the request may have failed. Retry with refresh=true.",
             };
           }
         }

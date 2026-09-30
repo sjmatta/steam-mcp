@@ -1,5 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import { cache } from "../cache.js";
 import { cdp } from "../cdp/client.js";
 import { getCollection } from "../cdp/programs/read.js";
 import { collectionOp, setAppFlags, type CollectionOpArg } from "../cdp/programs/write.js";
@@ -49,6 +50,9 @@ async function mutate(arg: CollectionOpArg, label: string): Promise<MutationResu
     return await cdp.evalInPage(collectionOp, arg, label);
   } catch (e) {
     return mapPageError(e, { op: arg.op, ref: arg.ref, name: arg.name });
+  } finally {
+    // Even a failed evaluation may have partially applied a write.
+    if (!arg.dryRun) cache().clear("library");
   }
 }
 
@@ -520,6 +524,8 @@ export function registerCollectionTools(server: McpServer): void {
           });
         } catch (e) {
           return mapPageError(e, { flag: "favorite" });
+        } finally {
+          if (!dry_run) cache().clear("library");
         }
       },
     ),
@@ -570,6 +576,8 @@ export function registerCollectionTools(server: McpServer): void {
           });
         } catch (e) {
           return mapPageError(e, { flag: "hidden" });
+        } finally {
+          if (!dry_run) cache().clear("library");
         }
       },
     ),

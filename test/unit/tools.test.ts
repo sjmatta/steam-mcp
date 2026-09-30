@@ -306,6 +306,31 @@ describe("library tools", () => {
 });
 
 describe("collection tools", () => {
+  it.each(["favorite", "hidden"])(
+    "refreshes library flags immediately after setting %s",
+    async (flag) => {
+      // Prime the five-minute snapshot before changing Steam's live flags.
+      await client.call("steam_library_list");
+      expect((await client.call(`steam_set_${flag}`, { appids: [620], value: true })).ok).toBe(
+        true,
+      );
+      const result = await client.call("steam_library_list", { [flag]: true });
+      expect(result.games.map((g: any) => g.appid)).toContain(620);
+    },
+  );
+
+  it("preserves the cached library during a collection dry run", async () => {
+    await client.call("steam_library_list");
+    const { cache } = await import("../../src/cache.js");
+    const before = cache().read("library");
+    await client.call("steam_collection_add_games", {
+      id: "uc-static",
+      appids: [620],
+      dry_run: true,
+    });
+    expect(cache().read("library")).toEqual(before);
+  });
+
   it("lists collections with dynamic and system flags", async () => {
     const result = await client.call("steam_collections_list");
     const dynamic = result.collections.find((c: any) => c.id === "uc-dynamic");

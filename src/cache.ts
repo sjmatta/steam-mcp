@@ -93,13 +93,17 @@ export function createCache(dir: string, now: () => number = () => Date.now()): 
     },
 
     count(namespace?: string): number {
-      return walkCount(namespace ? join(dir, namespace) : dir, !namespace);
+      if (namespace && PROTECTED_ENTRIES.has(namespace)) return 0;
+      if (!namespace) return walkCount(dir, true);
+      return (existsSync(pathFor(namespace)) ? 1 : 0) + walkCount(join(dir, namespace), false);
     },
 
     clear(namespace?: string): number {
+      if (namespace && PROTECTED_ENTRIES.has(namespace)) return 0;
       const removed = this.count(namespace);
       try {
         if (namespace) {
+          rmSync(pathFor(namespace), { force: true });
           rmSync(join(dir, namespace), { recursive: true, force: true });
         } else if (existsSync(dir)) {
           for (const entry of readdirSync(dir, { withFileTypes: true })) {

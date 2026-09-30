@@ -92,6 +92,27 @@ describe("cache", () => {
     expect(cache.get("library", 60_000)).toBe(1);
   });
 
+  it("counts and clears a root snapshot by namespace", () => {
+    const { cache } = freshCache();
+    cache.set("library", { games: [] });
+    cache.set("app-names", "Portal", "620");
+    expect(cache.count("library")).toBe(1);
+    expect(cache.clear("library")).toBe(1);
+    expect(cache.get("library", 60_000)).toBeNull();
+    expect(cache.get("app-names", 60_000, "620")).toBe("Portal");
+    expect(cache.clear("library")).toBe(0);
+  });
+
+  it("preserves backups even when explicitly asked to clear their namespace", () => {
+    const { cache, dir } = freshCache();
+    const backup = join(dir, "backups", "run-1");
+    mkdirSync(backup, { recursive: true });
+    writeFileSync(join(backup, "collections.json"), "[]", "utf8");
+    expect(cache.count("backups")).toBe(0);
+    expect(cache.clear("backups")).toBe(0);
+    expect(existsSync(join(backup, "collections.json"))).toBe(true);
+  });
+
   it("never deletes backups when clearing everything", () => {
     const { cache, dir } = freshCache();
     cache.set("library", 1);
