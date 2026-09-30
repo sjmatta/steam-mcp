@@ -30,34 +30,35 @@ async function getJson<T>(url: string): Promise<T> {
   const timer = setTimeout(() => {
     controller.abort();
   }, 20_000);
-  let res: Response;
   try {
-    res = await fetch(url, {
+    const res = await fetch(url, {
       signal: controller.signal,
       headers: { "User-Agent": "steam-mcp/0.1 (local)" },
     });
-  } catch {
-    // The request URL contains STEAM_API_KEY; fetch errors may include that URL.
+    if (res.status === 429) {
+      throw new SteamError("RATE_LIMITED", "Steam Web API rate limit hit.", {
+        hint: "Wait a minute and retry.",
+      });
+    }
+    if (!res.ok) {
+      throw new SteamError(
+        "NETWORK_ERROR",
+        `Steam Web API returned HTTP ${res.status}.`,
+        res.status === 401 || res.status === 403
+          ? { hint: "Check that STEAM_API_KEY is valid." }
+          : {},
+      );
+    }
+    // Keep the abort deadline active while consuming the response body too.
+    return (await res.json()) as T;
+  } catch (e) {
+    if (e instanceof SteamError) throw e;
+    // URLs and response bodies can contain the API key. Never echo parser or
+    // transport errors into a tool response.
     throw new SteamError("NETWORK_ERROR", "Steam Web API request failed.");
   } finally {
     clearTimeout(timer);
   }
-
-  if (res.status === 429) {
-    throw new SteamError("RATE_LIMITED", "Steam Web API rate limit hit.", {
-      hint: "Wait a minute and retry.",
-    });
-  }
-  if (!res.ok) {
-    throw new SteamError(
-      "NETWORK_ERROR",
-      `Steam Web API returned HTTP ${res.status}.`,
-      res.status === 401 || res.status === 403
-        ? { hint: "Check that STEAM_API_KEY is valid." }
-        : {},
-    );
-  }
-  return (await res.json()) as T;
 }
 
 export function hasApiKey(): boolean {
