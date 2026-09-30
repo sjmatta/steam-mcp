@@ -23,9 +23,20 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:plugin": "node --test test/scripts/*.test.mjs",
+    "plugin:configure": "node scripts/prepare-plugin.mjs --configure",
+    "plugin:build": "node scripts/prepare-plugin.mjs",
+    "plugin:check": "node scripts/check-plugin.mjs",
+    "plugin:install": "node scripts/install-plugin.mjs",
+    "tunnel:download": "node scripts/tunnel.mjs download",
+    "tunnel:init": "node scripts/tunnel.mjs init",
+    "tunnel:doctor": "node scripts/tunnel.mjs doctor",
+    "tunnel:start": "node scripts/tunnel.mjs start",
+    "tunnel:status": "node scripts/tunnel.mjs status",
+    "tunnel:stop": "node scripts/tunnel.mjs stop",
     "test:e2e": "vitest run --config vitest.integration.config.ts",
     "smoke": "npm run build && node scripts/smoke-stdio.mjs",
-    "check": "npm run format:check && npm run lint && npm run typecheck && npm run deps && npm run secrets:check && npm run test",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run deps && npm run secrets:check && npm run test && npm run test:plugin",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -36,30 +47,30 @@
     "*.{json,md,mjs,yml}": "prettier --write"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.30.1",
-    "ws": "^8.21.3",
+    "@modelcontextprotocol/sdk": "1.31.0",
+    "ws": "^8.22.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^24.13.6",
-    "@types/ws": "^8.5.13",
-    "@vitest/coverage-v8": "^5.0.1",
+    "@types/node": "^26.6.3",
+    "@types/ws": "^8.18.2",
+    "@vitest/coverage-v8": "^5.0.2",
     "eslint": "^10.11.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.12.0",
     "husky": "^9.1.7",
     "knip": "^6.38.0",
-    "lint-staged": "^17.5.1",
+    "lint-staged": "^17.6.0",
     "prettier": "^3.9.9",
     "tsx": "^4.23.15",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.70.1",
-    "vitest": "^5.0.1"
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.2"
   },
   "overrides": {
     "fast-uri": "4.2.1",
-    "hono": "4.13.9",
+    "hono": "4.13.11",
     "qs": "6.16.0",
     "nanoid": "6.0.1"
   }

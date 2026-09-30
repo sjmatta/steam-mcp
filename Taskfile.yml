@@ -1,0 +1,126 @@
+version: "3"
+dir: "{{.ROOT_DIR}}"
+
+vars:
+  CODEX_BIN: '{{default "codex" .CODEX_BIN}}'
+
+tasks:
+  default:
+    cmds:
+      - task --list
+
+  node:install:
+    desc: Install the pinned Node LTS through nvm
+    cmds:
+      - bash -c 'source "${NVM_DIR:-$HOME/.nvm}/nvm.sh" && nvm install'
+
+  install:
+    desc: Install locked npm dependencies with the pinned Node version
+    cmds:
+      - task: node:install
+      - task: npm
+        vars: { ARGS: ci }
+
+  npm:
+    internal: true
+    cmds:
+      - bash -c 'source "${NVM_DIR:-$HOME/.nvm}/nvm.sh" && nvm use --silent && npm {{.ARGS}}'
+
+  check:
+    desc: Run formatting, lint, types, dependency checks, and tests
+    cmds:
+      - task: npm
+        vars: { ARGS: run check }
+
+  build:
+    desc: Compile the MCP server
+    cmds:
+      - task: npm
+        vars: { ARGS: run build }
+
+  smoke:
+    desc: Build and verify the stdio MCP handshake
+    cmds:
+      - task: npm
+        vars: { ARGS: run smoke }
+
+  plugin:configure:
+    desc: Initialize private .env from the existing Steam MCP registration (preserve existing .env)
+    env:
+      CODEX_BIN: "{{.CODEX_BIN}}"
+    cmds:
+      - task: npm
+        vars: { ARGS: run plugin:configure }
+
+  plugin:build:
+    desc: Build a credential-free Desktop plugin and local marketplace
+    cmds:
+      - task: build
+      - task: npm
+        vars: { ARGS: run plugin:build }
+
+  plugin:check:
+    desc: Verify the generated plugin's actual command and all Steam tool schemas
+    cmds:
+      - task: npm
+        vars: { ARGS: run plugin:check }
+
+  plugin:install:
+    desc: Build, verify, and install Steam Library into the shared Desktop plugin cache
+    env:
+      CODEX_BIN: "{{.CODEX_BIN}}"
+    cmds:
+      - task: plugin:build
+      - task: plugin:check
+      - task: npm
+        vars: { ARGS: run plugin:install }
+
+  plugin:setup:
+    desc: Configure and install Steam Library for local Desktop Work/Codex (safe to rerun)
+    cmds:
+      - task: plugin:configure
+      - task: plugin:install
+
+  tunnel:download:
+    desc: Download the latest official Mac tunnel-client and verify its checksum
+    cmds:
+      - task: npm
+        vars: { ARGS: run tunnel:download }
+
+  tunnel:setup:
+    desc: Build and configure a private Steam tunnel using TUNNEL_ID (safe to rerun)
+    cmds:
+      - task: plugin:configure
+      - task: build
+      - task: npm
+        vars: { ARGS: run tunnel:init }
+
+  tunnel:doctor:
+    desc: Validate the Steam tunnel profile and runtime key
+    cmds:
+      - task: npm
+        vars: { ARGS: run tunnel:doctor }
+
+  tunnel:key:
+    desc: Enter the runtime API key privately (hidden prompt; file permissions 0600)
+    interactive: true
+    cmds:
+      - python3 -c 'import getpass,os; from pathlib import Path; p=Path(".tunnel/runtime-api-key"); p.parent.mkdir(mode=0o700,exist_ok=True); value=getpass.getpass("Runtime API key (hidden)\u003a ").strip(); assert value,"Key cannot be empty"; fd=os.open(p,os.O_WRONLY|os.O_CREAT|os.O_TRUNC,0o600); os.fchmod(fd,0o600); os.write(fd,(value+"\n").encode()); os.close(fd); print("Saved private runtime key.")'
+
+  tunnel:start:
+    desc: Start the managed Steam tunnel and disable duplicate local Steam registrations
+    cmds:
+      - task: npm
+        vars: { ARGS: run tunnel:start }
+
+  tunnel:status:
+    desc: Report the managed tunnel's process, health, and readiness
+    cmds:
+      - task: npm
+        vars: { ARGS: run tunnel:status }
+
+  tunnel:stop:
+    desc: Stop the managed Steam tunnel without deleting its remote registration
+    cmds:
+      - task: npm
+        vars: { ARGS: run tunnel:stop }

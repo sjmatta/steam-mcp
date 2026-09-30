@@ -10,7 +10,16 @@ import globals from "globals";
  * a silently dropped Steam write.
  */
 export default tseslint.config(
-  { ignores: ["dist/**", "coverage/**", "node_modules/**", "test/fixtures/**"] },
+  {
+    ignores: [
+      "dist/**",
+      "coverage/**",
+      "node_modules/**",
+      "test/fixtures/**",
+      ".plugin-build/**",
+      ".tunnel/**",
+    ],
+  },
 
   js.configs.recommended,
 

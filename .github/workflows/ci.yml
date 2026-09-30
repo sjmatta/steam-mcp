@@ -77,6 +77,11 @@ jobs:
         shell: bash
         run: node scripts/smoke-stdio.mjs
 
+      - name: Desktop plugin builds and starts with strict schemas and writes disabled
+        run: |
+          npm run plugin:build
+          npm run plugin:check
+
   coverage:
     name: coverage
     runs-on: ubuntu-latest
