@@ -361,27 +361,13 @@ npm run check         # everything above except build, coverage and smoke
 ### CI
 
 `.github/workflows/ci.yml` runs on pushes to `main`, pull requests, and on demand.
-Node 22 (the `engines` floor) and 24 on Linux, plus Node 24 on macOS — the only
-platform the server supports, so that the day the unit suite stops being
-platform-independent is the day CI says so.
+A single Node 24 job runs on macOS. It runs `npm run check` with
+`STEAM_ROOT=/nonexistent`, builds the server, checks the compiled page programs
+for injected helpers, and smoke-tests the stdio handshake and Desktop plugin.
 
-Beyond `npm run check`, three steps assert things a type check and unit tests
-structurally cannot:
-
-- **The unit suite is hermetic** — re-run with `STEAM_ROOT=/nonexistent`. The
-  suite claims no network, no real Steam install, no writes outside a temp
-  directory; this is what keeps the claim honest instead of merely stated.
-- **The built page programs carry no compiler helpers** — a `__spreadArray` in
-  that emit is an unresolvable identifier inside Steam's page. It exists only in
-  built output, so nothing else in the pipeline can see it.
-- **The server boots and stdout carries only JSON-RPC** (`scripts/smoke-stdio.mjs`).
-  Unit tests import modules directly and never start the binary, so a broken
-  registration or a stray `stdout` write would pass everything else and fail only
-  once a client connected. Verified to fail on an injected stray write.
-
-There is **no deployment job and no integration job**. The integration suite
-needs a real, logged-in Steam desktop client to drive over CEF; no hosted runner
-has one. Those stay opt-in and local.
+Run the Coverage workflow on demand for a downloadable report, or run
+`npm run test:coverage` locally. Live integration tests require a logged-in
+Steam desktop client and stay opt-in and local.
 
 Pull requests also run `.github/workflows/dependency-review.yml` to catch newly
 introduced vulnerable dependencies. `.github/workflows/codeql.yml` scans
