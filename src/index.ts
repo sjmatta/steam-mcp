@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { allowWrites, loadCheckoutWriteSetting } from "./config.js";
 import { registerStatusTools } from "./tools/status.js";
 import { registerRestartTool } from "./tools/restart.js";
 import { registerLibraryTools } from "./tools/library.js";
@@ -42,9 +43,12 @@ registerInstallTools(server);
 registerCacheTools(server);
 
 async function main(): Promise<void> {
+  loadCheckoutWriteSetting();
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("steam-mcp ready");
+  console.error(
+    `steam-mcp ready (pid ${process.pid}, writes ${allowWrites() ? "enabled" : "disabled"})`,
+  );
 }
 
 main().catch((err: unknown) => {

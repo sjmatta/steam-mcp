@@ -1,3 +1,4 @@
+import { parseEnv } from "node:util";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { existsSync, readFileSync } from "node:fs";
@@ -105,6 +106,13 @@ export function preferredDebugPort(): number {
 
 export function steamApiKey(): string | null {
   return process.env.STEAM_API_KEY?.trim() || null;
+}
+
+/** Desktop may launch dist/index.js directly with a minimal environment. */
+export function loadCheckoutWriteSetting(file = new URL("../.env", import.meta.url)): void {
+  if (process.env.STEAM_MCP_ALLOW_WRITES !== undefined || !existsSync(file)) return;
+  const value = parseEnv(readFileSync(file, "utf8")).STEAM_MCP_ALLOW_WRITES;
+  if (value !== undefined) process.env.STEAM_MCP_ALLOW_WRITES = value;
 }
 
 /** All mutating tools fail closed unless this is explicitly enabled. */

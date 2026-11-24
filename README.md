@@ -55,7 +55,7 @@ Choose one connection method below; use only one Steam MCP server process at a t
 Register with Claude Code from the repository root. This starts in read-only mode:
 
 ```bash
-claude mcp add steam -- node "$(pwd)/dist/index.js"
+claude mcp add steam -e STEAM_MCP_ALLOW_WRITES=0 -- node "$(pwd)/dist/index.js"
 ```
 
 Restart your MCP client, then call `steam_status` to see which data sources are available. Local
@@ -70,8 +70,10 @@ claude mcp add steam -e STEAM_MCP_ALLOW_WRITES=1 -- node "$(pwd)/dist/index.js"
 ```
 
 The `.env.example` file lists available variables. The Desktop plugin described below loads the
-checkout's `.env`; other clients must pass values through their configuration or process
-environment. Keep API keys out of Git.
+checkout's `.env`. A direct server launch also reads `STEAM_MCP_ALLOW_WRITES` from that
+file when the launch environment omits it. This opt-in applies to clients sharing the checkout.
+Set the variable to `0` in any client that should stay read-only. Other settings require an
+explicit environment or environment-file argument. Keep API keys out of Git.
 
 ### Other local MCP clients
 
