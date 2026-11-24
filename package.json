@@ -47,31 +47,31 @@
     "*.{json,md,mjs,yml}": "prettier --write"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.31.0",
-    "ws": "^8.22.0",
-    "zod": "^4.6.5"
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "ws": "^8.23.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^26.6.3",
+    "@types/node": "^26.6.7",
     "@types/ws": "^8.18.2",
-    "@vitest/coverage-v8": "^5.0.3",
-    "eslint": "^10.11.0",
+    "@vitest/coverage-v8": "^5.1.1",
+    "eslint": "^10.15.0",
     "eslint-config-prettier": "^10.1.8",
-    "globals": "^17.12.0",
+    "globals": "^17.14.0",
     "husky": "^9.1.7",
-    "knip": "^6.39.0",
-    "lint-staged": "^17.6.0",
-    "prettier": "^3.9.9",
+    "knip": "^6.48.0",
+    "lint-staged": "^17.6.2",
+    "prettier": "^3.10.1",
     "tsx": "^4.23.15",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.71.0",
-    "vitest": "^5.0.3"
+    "typescript-eslint": "^8.74.0",
+    "vitest": "^5.1.1"
   },
   "overrides": {
-    "fast-uri": "4.2.1",
-    "hono": "4.13.12",
-    "qs": "6.16.0",
-    "nanoid": "6.0.1"
+    "fast-uri": "4.2.4",
+    "hono": "4.13.21",
+    "qs": "6.17.1",
+    "nanoid": "6.0.2"
   }
 }
