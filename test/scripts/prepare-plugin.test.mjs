@@ -17,6 +17,27 @@ import { disableStandalone } from "../../scripts/install-plugin.mjs";
 
 const repo = join(dirname(fileURLToPath(import.meta.url)), "../..");
 
+test("Desktop's retained standalone command loads this checkout's private environment", () => {
+  const root = "/Steam Library";
+  const legacy = 'args = [\n  "/Steam Library/dist/index.js",\n]';
+  const settings = `[mcp_servers.steam]\n${legacy}\n[mcp_servers.other]\n${legacy}\n`;
+  const migrated = disableStandalone(settings, root);
+  assert.equal(
+    migrated,
+    settings
+      .replace("[mcp_servers.steam]\n", "[mcp_servers.steam]\nenabled = false\n")
+      .replace(
+        '  "/Steam Library/dist/index.js"',
+        '  "--env-file-if-exists=/Steam Library/.env", "/Steam Library/dist/index.js"',
+      ),
+  );
+  assert.equal(disableStandalone(migrated, root), migrated);
+  for (const args of ['["/other/dist/index.js"]', '["/Steam Library/dist/index.js", "--custom"]']) {
+    const custom = `[mcp_servers.steam]\nenabled = false\nargs = ${args}\n`;
+    assert.equal(disableStandalone(custom, root), custom);
+  }
+});
+
 test("migration disables only standalone Steam and preserves credentials and other servers", () => {
   const before =
     '[mcp_servers.other]\nenabled = true\n\n[mcp_servers.steam]\nenabled = true\ncommand = "node"\n\n[mcp_servers.steam.env]\nSTEAM_API_KEY = "test-only"\n';

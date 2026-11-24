@@ -6,10 +6,23 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 /** Preserve all other configuration, including Steam's credential section. */
-export function disableStandalone(config) {
+export function disableStandalone(config, checkout) {
   return config.replace(
     /(^\[mcp_servers\.(?:steam|"steam")\][^\S\r\n]*\r?\n)([\s\S]*?)(?=^\[|$(?![\s\S]))/m,
     (_match, header, body) => {
+      // Desktop can launch the retained standalone command. Upgrade only the
+      // legacy single-script args for this checkout, preserving custom launches.
+      if (checkout) {
+        const script = join(checkout, "dist", "index.js");
+        body = body.replace(
+          /^(args[ \t]*=[ \t]*\[\s*)("(?:[^"\\]|\\.)*"|'[^'\n]*')(?=\s*,?\s*\])/m,
+          (original, prefix, arg) => {
+            if (arg !== JSON.stringify(script) && arg !== `'${script}'`) return original;
+            const envArg = JSON.stringify(`--env-file-if-exists=${join(checkout, ".env")}`);
+            return `${prefix}${envArg}, ${arg}`;
+          },
+        );
+      }
       if (/^enabled\s*=/m.test(body)) {
         return header + body.replace(/^enabled\s*=\s*(?:true|false)/m, "enabled = false");
       }
@@ -30,7 +43,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   const path = join(process.env.CODEX_HOME || join(homedir(), ".codex"), "config.toml");
   if (existsSync(path)) {
     const before = readFileSync(path, "utf8");
-    const after = disableStandalone(before);
+    const after = disableStandalone(before, root);
     if (after !== before) {
       writeFileSync(path, after);
       console.error("Disabled the duplicate standalone Steam MCP; retained its settings.");

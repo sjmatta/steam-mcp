@@ -185,8 +185,11 @@ Useful tasks:
 - `task plugin:install`: build, verify, and install or refresh the package, preserving `.env`.
 - `task check` and `task smoke`: run the repository checks or verify the server handshake.
 
-The plugin's private `.env` is separate from the retained standalone registration. Change `.env`
-to adjust plugin settings; restarting the plugin is required for runtime changes.
+When setup finds a standalone Steam registration that launches only this checkout's
+`dist/index.js`, it updates that command to load the same private `.env` as the plugin.
+After changing `.env`, restart ChatGPT Desktop and call `steam_status` in the conversation
+where you intend to edit collections. Check `capabilities.collections_write.available`.
+A successful collection dry run can also occur while writes are disabled.
 
 ## First use
 
